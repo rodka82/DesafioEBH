@@ -6,5 +6,7 @@ namespace Domain.Entities
 {
     public class Store : BaseEntity
     {
+        public string Name { get; set; }
+        public string Address { get; set; }
     }
 }
