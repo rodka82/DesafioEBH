@@ -1,7 +1,9 @@
 ﻿using Application.Services;
+using Application.Validators;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Xunit;
 
@@ -9,16 +11,23 @@ namespace Tests.Services
 {
     public class StoreServiceTest
     {
-        public class NameValidation
+        protected readonly IStoreValidator _validator;
+        protected readonly IStoreService _service;
+
+        public StoreServiceTest()
+        {
+            _validator = new StoreValidator();
+            _service = new StoreService(_validator);
+    }
+        public class NameValidation : StoreServiceTest
         {
             [Fact]
             public void ShouldValidateNullStoreName()
             {
                 var store = new Store();
                 store.Name = null;
-                var service = new StoreService();
-
-                Assert.Throws<ArgumentNullException>(() => service.Save(store));
+                var response = _service.Save(store);
+                Assert.Contains(response.Messages, m => m.Contains("Nome da loja não pode ser nulo"));
             }
 
             [Fact]
@@ -27,9 +36,8 @@ namespace Tests.Services
                 var store = new Store();
                 store.Name = string.Empty;
                 store.Address = "Address";
-                var service = new StoreService();
-
-                Assert.Throws<ArgumentException>(() => service.Save(store));
+                var response = _service.Save(store);
+                Assert.Contains(response.Messages, m => m.Contains("Nome da loja não pode ser vazio"));
             }
 
             [Fact]
@@ -38,14 +46,13 @@ namespace Tests.Services
                 var store = new Store();
                 store.Name = " ";
                 store.Address = "Address";
-                var service = new StoreService();
-
-                Assert.Throws<ArgumentException>(() => service.Save(store));
+                var response = _service.Save(store);
+                Assert.Contains(response.Messages, m => m.Contains("Nome da loja não pode ser vazio"));
             }
 
         }
 
-        public class AddressValidation
+        public class AddressValidation : StoreServiceTest
         {
             [Fact]
             public void ShouldValidateNullStoreAddress()
@@ -53,9 +60,8 @@ namespace Tests.Services
                 var store = new Store();
                 store.Name = "Store Name";
                 store.Address = null;
-                var service = new StoreService();
-
-                Assert.Throws<ArgumentNullException>(() => service.Save(store));
+                var response = _service.Save(store);
+                Assert.Contains(response.Messages, m => m.Contains("O Endereço não pode ser nulo"));
             }
 
             [Fact]
@@ -64,9 +70,8 @@ namespace Tests.Services
                 var store = new Store();
                 store.Name = "Store Name";
                 store.Address = string.Empty;
-                var service = new StoreService();
-
-                Assert.Throws<ArgumentException>(() => service.Save(store));
+                var response = _service.Save(store);
+                Assert.Contains(response.Messages, m => m.Contains("O Endereço não pode ser vazio"));
             }
 
             [Fact]
@@ -75,9 +80,8 @@ namespace Tests.Services
                 var store = new Store();
                 store.Name = "Store Name";
                 store.Address = " ";
-                var service = new StoreService();
-
-                Assert.Throws<ArgumentException>(() => service.Save(store));
+                var response = _service.Save(store);
+                Assert.Contains(response.Messages, m => m.Contains("O Endereço não pode ser vazio"));
             }
         }
     }
