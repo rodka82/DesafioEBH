@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Infra.Repositories
+namespace Application.Validators
 {
-    public interface IStoreRepository : IRepository<Store>
+    public interface IStockItemValidator : IValidator<StockItem>
     {
     }
 }

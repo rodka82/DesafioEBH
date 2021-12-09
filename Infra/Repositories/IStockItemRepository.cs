@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Infra.Repositories
 {
-    public interface IStoreRepository : IRepository<Store>
+    public interface IStockItemRepository : IRepository<StockItem>
     {
     }
 }
