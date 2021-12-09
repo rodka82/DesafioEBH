@@ -46,22 +46,11 @@ namespace Tests.Services
             ConfigureDelete(repository);
         }
 
-        private void ConfigureDelete(Mock<IStoreRepository> repository)
-        {
-            repository.Setup(r => r.Delete(It.IsAny<Store>()))
-                            .Returns((Store store) =>
-                            {
-                                _databaseStores.Remove(store);
-                                return true;
-                            });
-        }
-
         private void ConfigureGetById(Mock<IStoreRepository> repository)
         {
             repository.Setup(r => r.GetById(It.IsAny<int>()))
                             .Returns((int id) => _databaseStores.Where(x => x.Id == id).FirstOrDefault());
         }
-
         private void ConfigureAdd(Mock<IStoreRepository> repository)
         {
             repository.Setup(r => r.Add(It.IsAny<Store>()))
@@ -84,6 +73,16 @@ namespace Tests.Services
                                 return true;
                             })
                             .Callback<Store>(store => store.Id = 1);
+        }
+
+        private void ConfigureDelete(Mock<IStoreRepository> repository)
+        {
+            repository.Setup(r => r.Delete(It.IsAny<Store>()))
+                            .Returns((Store store) =>
+                            {
+                                _databaseStores.Remove(store);
+                                return true;
+                            });
         }
 
         public class NameValidation : StoreServiceTest
