@@ -43,7 +43,7 @@ namespace Application.Services
             return new ApplicationResponse
             {
                 IsValid = _validator.IsValid,
-                Messages = new List<string> { "Loja salva com sucesso" }
+                Messages = new List<string> { "Estoque atualizado com sucesso" }
             };
         }
 
@@ -61,7 +61,29 @@ namespace Application.Services
             if (stockItem.Id == 0)
                 _repository.Add(stockItem);
             else
-                _repository.Update(stockItem);
+                UpdateStock(stockItem);
+        }
+
+        private void UpdateStock(StockItem stockItem)
+        {
+            var existentStockItem = _repository.GetById(stockItem.Id);
+            UpdateQuantity(stockItem, existentStockItem);
+            _repository.Update(existentStockItem);
+        }
+
+        private static void UpdateQuantity(StockItem stockItem, StockItem existentStockItem)
+        {
+            if (stockItem.OperationType == OperationType.Increment)
+                existentStockItem.Quantity += stockItem.Quantity;
+            else if (stockItem.OperationType == OperationType.Decrement)
+                Decrement(stockItem, existentStockItem);
+
+        }
+
+        private static void Decrement(StockItem stockItem, StockItem existentStockItem)
+        {
+            existentStockItem.Quantity -= stockItem.Quantity;
+            existentStockItem.Quantity = existentStockItem.Quantity < 0 ? 0 : existentStockItem.Quantity;
         }
 
         public void Delete(StockItem stockItem)

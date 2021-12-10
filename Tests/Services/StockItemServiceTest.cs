@@ -29,6 +29,7 @@ namespace Tests.Services
             stockItem.Product = new Product { Id = 1, Name = "Nome Produto", Price = 9.5 };
             stockItem.Store = new Store { Id = 1, Name = "Nome Loja" };
             stockItem.Quantity = 10;
+            stockItem.OperationType = OperationType.Increment;
             return stockItem;
         }
 
@@ -76,7 +77,7 @@ namespace Tests.Services
         public class QuantityManangementValidation : StockItemServiceTest
         {
             [Fact]
-            public void ShouldAddValueToStockItemQuantity()
+            public void ShouldIncrementValueToStockItemQuantity()
             {
                 var stockItem = GenerateValidStockItem();
 
@@ -94,7 +95,7 @@ namespace Tests.Services
                 Assert.IsType<StockItem>(result);
                 Assert.Equal("Nome Produto", result.Product.Name);
                 Assert.Equal("Nome Loja", result.Store.Name);
-                Assert.Equal(50, result.Quantity);
+                Assert.Equal(60, result.Quantity);
 
                 ResetRepository();
             }
@@ -110,6 +111,7 @@ namespace Tests.Services
                 var stockItemToUpdate = GenerateValidStockItem();
                 stockItemToUpdate.Id = 1;
                 stockItemToUpdate.Quantity = 50;
+                stockItemToUpdate.OperationType = OperationType.Decrement;
 
                 _service.Save(stockItemToUpdate);
 
@@ -119,7 +121,7 @@ namespace Tests.Services
                 Assert.IsType<StockItem>(result);
                 Assert.Equal("Nome Produto", result.Product.Name);
                 Assert.Equal("Nome Loja", result.Store.Name);
-                Assert.Equal(50, result.Quantity);
+                Assert.Equal(0, result.Quantity);
 
                 ResetRepository();
             }

@@ -9,5 +9,6 @@ namespace Domain.Entities
         public Store Store { get; set; }
         public Product Product { get; set; }
         public int Quantity { get; set; }
+        public OperationType OperationType { get; set; }
     }
 }
