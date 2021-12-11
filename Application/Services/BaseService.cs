@@ -42,7 +42,7 @@ namespace Application.Services
             return new ApplicationResponse
             {
                 IsValid = _validator.IsValid,
-                Messages = new List<string> { "Loja salva com sucesso" }
+                Messages = new List<string> { "Registro salvo com sucesso" }
             };
         }
 
@@ -63,9 +63,13 @@ namespace Application.Services
                 _repository.Update(entity);
         }
 
-        public void Delete(T Product)
+        public IApplicationResponse Delete(T entity)
         {
-            _repository.Delete(Product);
+            if (entity == null || entity.Id <= 0)
+                ReturnValidationErrorResponse();
+
+            _repository.Delete(entity);
+            return ReturnSuccessResponse();
         }
     }
 }

@@ -12,8 +12,11 @@ namespace Application.Validators
     {
         public override void Validate(StockItem stockItem)
         {
-            ValidateStore(stockItem);
-            ValidateProduct(stockItem);
+            if (!IsNull(stockItem, "Nenhum item foi informado"))
+            {
+                ValidateStore(stockItem);
+                ValidateProduct(stockItem);
+            }
 
             SetValidity();
         }

@@ -24,5 +24,15 @@ namespace Application.Validators
         {
             IsValid = !ErrorMessages.Any();
         }
+
+        protected bool IsNull(BaseEntity product, string message)
+        {
+            if (product == null)
+            {
+                ErrorMessages.Add(message);
+                return true;
+            }
+            return false;
+        }
     }
 }

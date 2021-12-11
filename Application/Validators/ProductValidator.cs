@@ -11,8 +11,11 @@ namespace Application.Validators
     {
         public override void Validate(Product product)
         {
-            ValidateName(product);
-            ValidatePrice(product);
+            if (!IsNull(product, "Nenhum produto foi informado"))
+            {
+                ValidateName(product);
+                ValidatePrice(product);
+            }
 
             SetValidity();
         }
@@ -20,17 +23,13 @@ namespace Application.Validators
         private void ValidatePrice(Product product)
         {
             if (product.Price <= default(double))
-            {
                 ErrorMessages.Add("O preço do produto deve ser informado");
-            }
         }
 
         private void ValidateName(Product product)
         {
             if (product.Name.IsNull() || product.Name.IsEmpty())
-            {
                 ErrorMessages.Add("Informe o Nome do produto.");
-            }
         }
     }
 }

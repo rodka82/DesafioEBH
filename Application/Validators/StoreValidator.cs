@@ -12,8 +12,11 @@ namespace Application.Validators
     {
         public override void Validate(Store store)
         {
-            ValidateName(store);
-            ValidateAddress(store);
+            if (!IsNull(store, "Nenhuma loja foi informada"))
+            {
+                ValidateName(store);
+                ValidateAddress(store);
+            }
 
             SetValidity();
         }

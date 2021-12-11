@@ -31,6 +31,13 @@ namespace Tests.Services
             return store;
         }
 
+        [Fact]
+        public void ShouldValidateNullObject()
+        {
+            var response = _service.Save(null);
+            Assert.Contains(response.Messages, m => m.Contains("Nenhuma loja foi informada"));
+        }
+
         public class NameValidation : StoreServiceTest
         {
             private const string NAME_VALIDATION_MESSAGE = "O nome da loja deve ser preenchido";

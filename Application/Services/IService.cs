@@ -7,7 +7,7 @@ namespace Application.Services
     public interface IService<T> where T: BaseEntity
     {
         T GetById(int id);
-        IApplicationResponse Save(T store);
-        void Delete(T store);
+        IApplicationResponse Save(T entity);
+        IApplicationResponse Delete(T entity);
     }
 }

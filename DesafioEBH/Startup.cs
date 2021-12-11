@@ -1,18 +1,16 @@
+using API.Mapper;
+using API.Utils;
+using Application.Utils;
 using Application.Validators;
+using AutoMapper;
+using Domain.DTOs;
 using Domain.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DesafioEBH
 {
@@ -29,6 +27,9 @@ namespace DesafioEBH
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IValidator<Store>, StoreValidator>();
+
+            var mapper = MapperGenerator.GenerateMapper();
+            services.AddSingleton(mapper);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

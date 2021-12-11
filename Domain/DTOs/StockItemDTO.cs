@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Domain.DTOs
 {
-    public class StockItemDTO
+    public class StockItemDTO : BaseEntityDTO
     {
         public StoreDTO Store { get; set; }
         public ProductDTO Product { get; set; }

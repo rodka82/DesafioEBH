@@ -27,6 +27,13 @@ namespace Tests.Services
             return Product;
         }
 
+        [Fact]
+        public void ShouldValidateNullObject()
+        {
+            var response = _service.Save(null);
+            Assert.Contains(response.Messages, m => m.Contains("Nenhum produto foi informado"));
+        }
+
         public class NameValidation : ProductServiceTest
         {
             private const string NAME_VALIDATION_MESSAGE = "Informe o Nome do produto.";
