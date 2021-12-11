@@ -19,6 +19,14 @@ namespace Tests.Services
             _service = new ProductService(_validator, _repository);
         }
 
+        private Product GenerateValidProduct()
+        {
+            var Product = new Product();
+            Product.Name = "Product Name";
+            Product.Price = 10.50;
+            return Product;
+        }
+
         public class NameValidation : ProductServiceTest
         {
             [Fact]
@@ -123,15 +131,6 @@ namespace Tests.Services
 
                 ResetRepository();
             }
-
-            private static Product GenerateValidProduct()
-            {
-                var Product = new Product();
-                Product.Name = "Product Name";
-                Product.Price = 10.50;
-                return Product;
-            }
-
         }
     }
 }

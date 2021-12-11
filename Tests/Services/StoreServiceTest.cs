@@ -23,6 +23,14 @@ namespace Tests.Services
             _service = new StoreService(_validator, _repository);
         }
 
+        private Store GenerateValidStore()
+        {
+            var store = new Store();
+            store.Name = "Store Name";
+            store.Address = "Store Address";
+            return store;
+        }
+
         public class NameValidation : StoreServiceTest
         {
             [Fact]
@@ -147,15 +155,6 @@ namespace Tests.Services
 
                 ResetRepository();
             }
-
-            private static Store GenerateValidStore()
-            {
-                var store = new Store();
-                store.Name = "Store Name";
-                store.Address = "Store Address";
-                return store;
-            }
-
         }
     }
 }

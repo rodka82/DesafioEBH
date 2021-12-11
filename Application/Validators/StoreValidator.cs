@@ -8,23 +8,14 @@ using System.Text;
 
 namespace Application.Validators
 {
-    public class StoreValidator : IValidator<Store>
+    public class StoreValidator : Validator<Store>
     {
-        public List<string> ErrorMessages { get; set; }
-
-        public bool IsValid { get; set; }
-
-        public StoreValidator()
-        {
-            ErrorMessages = new List<string>();
-        }
-
-        public void Validate(Store store)
+        public override void Validate(Store store)
         {
             ValidateName(store);
             ValidateAddress(store);
 
-            IsValid = !ErrorMessages.Any();
+            SetValidity();
         }
 
         private void ValidateAddress(Store store)

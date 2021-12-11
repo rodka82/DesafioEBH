@@ -8,23 +8,14 @@ using System.Text;
 
 namespace Application.Validators
 {
-    public class StockItemValidator : IValidator<StockItem>
+    public class StockItemValidator : Validator<StockItem>
     {
-        public List<string> ErrorMessages { get; set; }
-
-        public bool IsValid { get; set; }
-
-        public StockItemValidator()
-        {
-            ErrorMessages = new List<string>();
-        }
-
-        public void Validate(StockItem stockItem)
+        public override void Validate(StockItem stockItem)
         {
             ValidateStore(stockItem);
             ValidateProduct(stockItem);
 
-            IsValid = !ErrorMessages.Any();
+            SetValidity();
         }
 
         private void ValidateProduct(StockItem stockItem)

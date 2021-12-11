@@ -7,24 +7,14 @@ using System.Text;
 
 namespace Application.Validators
 {
-    public class ProductValidator : IValidator<Product>
+    public class ProductValidator : Validator<Product>
     {
-
-        public List<string> ErrorMessages { get; set; }
-
-        public bool IsValid { get; set; }
-
-        public ProductValidator()
-        {
-            ErrorMessages = new List<string>();
-        }
-
-        public void Validate(Product product)
+        public override void Validate(Product product)
         {
             ValidateName(product);
             ValidatePrice(product);
 
-            IsValid = !ErrorMessages.Any();
+            SetValidity();
         }
 
         private void ValidatePrice(Product product)
