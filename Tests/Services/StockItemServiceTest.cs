@@ -13,7 +13,7 @@ namespace Tests.Services
 {
     public class StockItemServiceTest : BaseStockItemServiceTest
     {
-        protected readonly IStockItemValidator _validator;
+        protected readonly IValidator<StockItem> _validator;
         protected readonly IStockItemService _service;
 
         public StockItemServiceTest()

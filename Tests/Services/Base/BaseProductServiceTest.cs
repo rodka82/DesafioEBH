@@ -8,7 +8,7 @@ namespace Tests.Services
 {
     public class BaseProductServiceTest
     {
-        protected IProductRepository _repository;
+        protected IRepository<Product> _repository;
         protected List<Product> _databaseProducts;
 
         protected void ResetRepository()
@@ -17,14 +17,14 @@ namespace Tests.Services
             _repository = GenerateRepositoryMock();
         }
 
-        protected IProductRepository GenerateRepositoryMock()
+        protected IRepository<Product> GenerateRepositoryMock()
         {
-            var repository = new Mock<IProductRepository>();
+            var repository = new Mock<IRepository<Product>>();
             ConfigureRepositoryMock(repository);
             return repository.Object;
         }
 
-        private void ConfigureRepositoryMock(Mock<IProductRepository> repository)
+        private void ConfigureRepositoryMock(Mock<IRepository<Product>> repository)
         {
             ConfigureGetById(repository);
             ConfigureAdd(repository);
@@ -32,7 +32,7 @@ namespace Tests.Services
             ConfigureDelete(repository);
         }
 
-        private void ConfigureAdd(Mock<IProductRepository> repository)
+        private void ConfigureAdd(Mock<IRepository<Product>> repository)
         {
             repository.Setup(r => r.Add(It.IsAny<Product>()))
                             .Returns((Product Product) =>
@@ -43,7 +43,7 @@ namespace Tests.Services
                             .Callback<Product>(Product => Product.Id = 1);
         }
 
-        private void ConfigureDelete(Mock<IProductRepository> repository)
+        private void ConfigureDelete(Mock<IRepository<Product>> repository)
         {
             repository.Setup(r => r.Delete(It.IsAny<Product>()))
                             .Returns((Product Product) =>
@@ -53,13 +53,13 @@ namespace Tests.Services
                             });
         }
 
-        private void ConfigureGetById(Mock<IProductRepository> repository)
+        private void ConfigureGetById(Mock<IRepository<Product>> repository)
         {
             repository.Setup(r => r.GetById(It.IsAny<int>()))
                             .Returns((int id) => _databaseProducts.Where(x => x.Id == id).FirstOrDefault());
         }
 
-        private void ConfigureUpdate(Mock<IProductRepository> repository)
+        private void ConfigureUpdate(Mock<IRepository<Product>> repository)
         {
             repository.Setup(r => r.Update(It.IsAny<Product>()))
                             .Returns((Product Product) =>

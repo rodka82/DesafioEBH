@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Application.Validators
 {
-    public class StoreValidator : IStoreValidator
+    public class StoreValidator : IValidator<Store>
     {
         public List<string> ErrorMessages { get; set; }
 

@@ -9,7 +9,7 @@ namespace Tests.Services
 {
     public class ProductServiceTest : BaseProductServiceTest
     {
-        protected readonly IProductValidator _validator;
+        protected readonly IValidator<Product> _validator;
         protected readonly IProductService _service;
 
         public ProductServiceTest()
@@ -27,7 +27,7 @@ namespace Tests.Services
                 var Product = new Product();
                 Product.Name = null;
                 var response = _service.Save(Product);
-                Assert.Contains(response.Messages, m => m.Contains("Nome do produto não pode ser nulo"));
+                Assert.Contains(response.Messages, m => m.Contains("Informe o Nome do produto."));
             }
 
             [Fact]
@@ -37,7 +37,7 @@ namespace Tests.Services
                 Product.Name = string.Empty;
                 Product.Price = 10.5;
                 var response = _service.Save(Product);
-                Assert.Contains(response.Messages, m => m.Contains("Nome do produto não pode ser vazio"));
+                Assert.Contains(response.Messages, m => m.Contains("Informe o Nome do produto."));
             }
 
             [Fact]
@@ -47,7 +47,7 @@ namespace Tests.Services
                 Product.Name = " ";
                 Product.Price = 10.5;
                 var response = _service.Save(Product);
-                Assert.Contains(response.Messages, m => m.Contains("Nome do produto não pode ser vazio"));
+                Assert.Contains(response.Messages, m => m.Contains("Informe o Nome do produto."));
             }
 
         }

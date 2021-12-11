@@ -10,10 +10,10 @@ namespace Application.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IProductValidator _validator;
-        private readonly IProductRepository _repository;
+        private readonly IValidator<Product> _validator;
+        private readonly IRepository<Product> _repository;
 
-        public ProductService(IProductValidator validator, IProductRepository repository)
+        public ProductService(IValidator<Product> validator, IRepository<Product> repository)
         {
             _validator = validator;
             _repository = repository;
@@ -30,14 +30,14 @@ namespace Application.Services
             _validator.Validate(Product);
 
             if (!_validator.IsValid)
-                return ValidationErrorResponse();
+                return ReturnValidationErrorResponse();
 
             AddOrUpdate(Product);
 
-            return SuccessResponse();
+            return ReturnSuccessResponse();
         }
 
-        private IApplicationResponse SuccessResponse()
+        private IApplicationResponse ReturnSuccessResponse()
         {
             return new ApplicationResponse
             {
@@ -46,7 +46,7 @@ namespace Application.Services
             };
         }
 
-        private IApplicationResponse ValidationErrorResponse()
+        private IApplicationResponse ReturnValidationErrorResponse()
         {
             return new ApplicationResponse
             {

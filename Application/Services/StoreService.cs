@@ -11,10 +11,10 @@ namespace Application.Services
 {
     public class StoreService : IStoreService
     {
-        private readonly IStoreValidator _validator;
-        private readonly IStoreRepository _repository;
+        private readonly IValidator<Store> _validator;
+        private readonly IRepository<Store> _repository;
 
-        public StoreService(IStoreValidator validator, IStoreRepository repository)
+        public StoreService(IValidator<Store> validator, IRepository<Store> repository)
         {
             _validator = validator;
             _repository = repository;

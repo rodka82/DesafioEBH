@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Application.Validators
 {
-    public class ProductValidator : IProductValidator
+    public class ProductValidator : IValidator<Product>
     {
 
         public List<string> ErrorMessages { get; set; }
@@ -37,13 +37,9 @@ namespace Application.Validators
 
         private void ValidateName(Product product)
         {
-            if (product.Name.IsNull())
+            if (product.Name.IsNull() || product.Name.IsEmpty())
             {
-                ErrorMessages.Add("Nome do produto não pode ser nulo");
-            }
-            else if (product.Name.IsEmpty())
-            {
-                ErrorMessages.Add("Nome do produto não pode ser vazio");
+                ErrorMessages.Add("Informe o Nome do produto.");
             }
         }
     }

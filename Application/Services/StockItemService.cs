@@ -11,10 +11,10 @@ namespace Application.Services
 {
     public class StockItemService : IStockItemService
     {
-        private readonly IStockItemValidator _validator;
-        private readonly IStockItemRepository _repository;
+        private readonly IValidator<StockItem> _validator;
+        private readonly IRepository<StockItem> _repository;
 
-        public StockItemService(IStockItemValidator validator, IStockItemRepository repository)
+        public StockItemService(IValidator<StockItem> validator, IRepository<StockItem> repository)
         {
             _validator = validator;
             _repository = repository;

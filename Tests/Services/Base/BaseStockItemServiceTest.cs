@@ -8,7 +8,7 @@ namespace Tests.Services
 {
     public class BaseStockItemServiceTest
     {
-        protected IStockItemRepository _repository;
+        protected IRepository<StockItem> _repository;
         protected List<StockItem> _databaseStockItems;
 
         protected void ResetRepository()
@@ -17,14 +17,14 @@ namespace Tests.Services
             _repository = GenerateRepositoryMock();
         }
 
-        protected IStockItemRepository GenerateRepositoryMock()
+        protected IRepository<StockItem> GenerateRepositoryMock()
         {
-            var repository = new Mock<IStockItemRepository>();
+            var repository = new Mock<IRepository<StockItem>>();
             ConfigureRepositoryMock(repository);
             return repository.Object;
         }
 
-        private void ConfigureRepositoryMock(Mock<IStockItemRepository> repository)
+        private void ConfigureRepositoryMock(Mock<IRepository<StockItem>> repository)
         {
             ConfigureGetById(repository);
             ConfigureAdd(repository);
@@ -32,7 +32,7 @@ namespace Tests.Services
             ConfigureDelete(repository);
         }
 
-        private void ConfigureAdd(Mock<IStockItemRepository> repository)
+        private void ConfigureAdd(Mock<IRepository<StockItem>> repository)
         {
             repository.Setup(r => r.Add(It.IsAny<StockItem>()))
                             .Returns((StockItem StockItem) =>
@@ -43,7 +43,7 @@ namespace Tests.Services
                             .Callback<StockItem>(StockItem => StockItem.Id = 1);
         }
 
-        private void ConfigureDelete(Mock<IStockItemRepository> repository)
+        private void ConfigureDelete(Mock<IRepository<StockItem>> repository)
         {
             repository.Setup(r => r.Delete(It.IsAny<StockItem>()))
                             .Returns((StockItem StockItem) =>
@@ -53,13 +53,13 @@ namespace Tests.Services
                             });
         }
 
-        private void ConfigureGetById(Mock<IStockItemRepository> repository)
+        private void ConfigureGetById(Mock<IRepository<StockItem>> repository)
         {
             repository.Setup(r => r.GetById(It.IsAny<int>()))
                             .Returns((int id) => _databaseStockItems.Where(x => x.Id == id).FirstOrDefault());
         }
 
-        private void ConfigureUpdate(Mock<IStockItemRepository> repository)
+        private void ConfigureUpdate(Mock<IRepository<StockItem>> repository)
         {
             repository.Setup(r => r.Update(It.IsAny<StockItem>()))
                             .Returns((StockItem StockItem) =>
