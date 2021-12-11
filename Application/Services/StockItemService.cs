@@ -9,66 +9,20 @@ using System.Text;
 
 namespace Application.Services
 {
-    public class StockItemService : IStockItemService
+    public class StockItemService : BaseService<StockItem>, IStockItemService
     {
-        private readonly IValidator<StockItem> _validator;
-        private readonly IRepository<StockItem> _repository;
-
         public StockItemService(IValidator<StockItem> validator, IRepository<StockItem> repository)
+            :base(validator, repository)
         {
-            _validator = validator;
-            _repository = repository;
         }
 
-        public StockItem GetById(int id)
-        {
-            var store = _repository.GetById(id);
-            return store;
-        }
-
-        public IApplicationResponse Save(StockItem stockItem)
-        {
-            _validator.Validate(stockItem);
-
-            if (!_validator.IsValid)
-                return ValidationErrorResponse();
-
-            AddOrUpdate(stockItem);
-
-            return SuccessResponse();
-        }
-
-        private IApplicationResponse SuccessResponse()
-        {
-            return new ApplicationResponse
-            {
-                IsValid = _validator.IsValid,
-                Messages = new List<string> { "Estoque atualizado com sucesso" }
-            };
-        }
-
-        private IApplicationResponse ValidationErrorResponse()
-        {
-            return new ApplicationResponse
-            {
-                IsValid = _validator.IsValid,
-                Messages = _validator.ErrorMessages
-            };
-        }
-
-        private void AddOrUpdate(StockItem stockItem)
-        {
-            if (stockItem.Id == 0)
-                _repository.Add(stockItem);
-            else
-                UpdateStock(stockItem);
-        }
-
-        private void UpdateStock(StockItem stockItem)
+        public IApplicationResponse UpdateStock(StockItem stockItem)
         {
             var existentStockItem = _repository.GetById(stockItem.Id);
             UpdateQuantity(stockItem, existentStockItem);
             _repository.Update(existentStockItem);
+            //TODO: acertar isso
+            return new ApplicationResponse();
         }
 
         private static void UpdateQuantity(StockItem stockItem, StockItem existentStockItem)
@@ -84,11 +38,6 @@ namespace Application.Services
         {
             existentStockItem.Quantity -= stockItem.Quantity;
             existentStockItem.Quantity = existentStockItem.Quantity < 0 ? 0 : existentStockItem.Quantity;
-        }
-
-        public void Delete(StockItem stockItem)
-        {
-            _repository.Delete(stockItem);
         }
     }
 }

@@ -9,64 +9,11 @@ using System.Text;
 
 namespace Application.Services
 {
-    public class StoreService : IStoreService
+    public class StoreService : BaseService<Store>
     {
-        private readonly IValidator<Store> _validator;
-        private readonly IRepository<Store> _repository;
-
-        public StoreService(IValidator<Store> validator, IRepository<Store> repository)
+        public StoreService(IValidator<Store> validator, IRepository<Store> repository) 
+            : base(validator, repository)
         {
-            _validator = validator;
-            _repository = repository;
-        }
-
-        public Store GetById(int id)
-        {
-            var store = _repository.GetById(id);
-            return store;
-        }
-
-        public IApplicationResponse Save(Store store)
-        {
-            _validator.Validate(store);
-
-            if (!_validator.IsValid)
-                return ValidationErrorResponse();
-
-            AddOrUpdate(store);
-
-            return SuccessResponse();
-        }
-
-        private IApplicationResponse SuccessResponse()
-        {
-            return new ApplicationResponse
-            {
-                IsValid = _validator.IsValid,
-                Messages = new List<string> { "Loja salva com sucesso" }
-            };
-        }
-
-        private IApplicationResponse ValidationErrorResponse()
-        {
-            return new ApplicationResponse
-            {
-                IsValid = _validator.IsValid,
-                Messages = _validator.ErrorMessages
-            };
-        }
-
-        private void AddOrUpdate(Store store)
-        {
-            if (store.Id == 0)
-                _repository.Add(store);
-            else
-                _repository.Update(store);
-        }
-
-        public void Delete(Store store)
-        {
-            _repository.Delete(store);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Tests.Services
     public class ProductServiceTest : BaseProductServiceTest
     {
         protected readonly IValidator<Product> _validator;
-        protected readonly IProductService _service;
+        protected readonly IService<Product> _service;
 
         public ProductServiceTest()
         {

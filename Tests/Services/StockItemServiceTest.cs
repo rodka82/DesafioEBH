@@ -87,7 +87,7 @@ namespace Tests.Services
                 stockItemToUpdate.Id = 1;
                 stockItemToUpdate.Quantity = 50;
 
-                _service.Save(stockItemToUpdate);
+                _service.UpdateStock(stockItemToUpdate);
 
                 var result = _repository.GetById(1);
 
@@ -113,7 +113,7 @@ namespace Tests.Services
                 stockItemToUpdate.Quantity = 50;
                 stockItemToUpdate.OperationType = OperationType.Decrement;
 
-                _service.Save(stockItemToUpdate);
+                _service.UpdateStock(stockItemToUpdate);
 
                 var result = _repository.GetById(1);
 

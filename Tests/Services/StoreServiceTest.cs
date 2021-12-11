@@ -14,7 +14,7 @@ namespace Tests.Services
     public class StoreServiceTest : BaseStoreServiceTest
     {
         protected readonly IValidator<Store> _validator;
-        protected readonly IStoreService _service;
+        protected readonly IService<Store> _service;
 
         public StoreServiceTest()
         {
