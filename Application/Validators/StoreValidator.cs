@@ -20,26 +20,14 @@ namespace Application.Validators
 
         private void ValidateAddress(Store store)
         {
-            if (store.Address.IsNull())
-            {
-                ErrorMessages.Add("O Endereço não pode ser nulo");
-            }
-            else if (store.Address.IsEmpty())
-            {
-                ErrorMessages.Add("O Endereço não pode ser vazio");
-            }
+            if (store.Address.IsNull() || store.Address.IsEmpty())
+                ErrorMessages.Add("O endereço deve ser preenchido");
         }
 
         private void ValidateName(Store store)
         {
-            if (store.Name.IsNull())
-            {
-                ErrorMessages.Add("Nome da loja não pode ser nulo");
-            }
-            else if (store.Name.IsEmpty())
-            {
-                ErrorMessages.Add("Nome da loja não pode ser vazio");
-            }
+            if (store.Name.IsNull() || store.Name.IsEmpty())
+                ErrorMessages.Add("O nome da loja deve ser preenchido");
         }
     }
 }

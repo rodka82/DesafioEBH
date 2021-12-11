@@ -29,13 +29,15 @@ namespace Tests.Services
 
         public class NameValidation : ProductServiceTest
         {
+            private const string NAME_VALIDATION_MESSAGE = "Informe o Nome do produto.";
+
             [Fact]
             public void ShouldValidateNullProductName()
             {
                 var Product = new Product();
                 Product.Name = null;
                 var response = _service.Save(Product);
-                Assert.Contains(response.Messages, m => m.Contains("Informe o Nome do produto."));
+                Assert.Contains(response.Messages, m => m.Contains(NAME_VALIDATION_MESSAGE));
             }
 
             [Fact]
@@ -45,7 +47,7 @@ namespace Tests.Services
                 Product.Name = string.Empty;
                 Product.Price = 10.5;
                 var response = _service.Save(Product);
-                Assert.Contains(response.Messages, m => m.Contains("Informe o Nome do produto."));
+                Assert.Contains(response.Messages, m => m.Contains(NAME_VALIDATION_MESSAGE));
             }
 
             [Fact]
@@ -55,7 +57,7 @@ namespace Tests.Services
                 Product.Name = " ";
                 Product.Price = 10.5;
                 var response = _service.Save(Product);
-                Assert.Contains(response.Messages, m => m.Contains("Informe o Nome do produto."));
+                Assert.Contains(response.Messages, m => m.Contains(NAME_VALIDATION_MESSAGE));
             }
 
         }

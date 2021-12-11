@@ -33,13 +33,15 @@ namespace Tests.Services
 
         public class NameValidation : StoreServiceTest
         {
+            private const string NAME_VALIDATION_MESSAGE = "O nome da loja deve ser preenchido";
+
             [Fact]
             public void ShouldValidateNullStoreName()
             {
                 var store = new Store();
                 store.Name = null;
                 var response = _service.Save(store);
-                Assert.Contains(response.Messages, m => m.Contains("Nome da loja não pode ser nulo"));
+                Assert.Contains(response.Messages, m => m.Contains(NAME_VALIDATION_MESSAGE));
             }
 
             [Fact]
@@ -49,7 +51,7 @@ namespace Tests.Services
                 store.Name = string.Empty;
                 store.Address = "Address";
                 var response = _service.Save(store);
-                Assert.Contains(response.Messages, m => m.Contains("Nome da loja não pode ser vazio"));
+                Assert.Contains(response.Messages, m => m.Contains(NAME_VALIDATION_MESSAGE));
             }
 
             [Fact]
@@ -59,13 +61,15 @@ namespace Tests.Services
                 store.Name = " ";
                 store.Address = "Address";
                 var response = _service.Save(store);
-                Assert.Contains(response.Messages, m => m.Contains("Nome da loja não pode ser vazio"));
+                Assert.Contains(response.Messages, m => m.Contains(NAME_VALIDATION_MESSAGE));
             }
 
         }
 
         public class AddressValidation : StoreServiceTest
         {
+            private const string ADDRESS_VALIDATION_MESSAGE = "O endereço deve ser preenchido";
+
             [Fact]
             public void ShouldValidateNullStoreAddress()
             {
@@ -73,7 +77,7 @@ namespace Tests.Services
                 store.Name = "Store Name";
                 store.Address = null;
                 var response = _service.Save(store);
-                Assert.Contains(response.Messages, m => m.Contains("O Endereço não pode ser nulo"));
+                Assert.Contains(response.Messages, m => m.Contains(ADDRESS_VALIDATION_MESSAGE));
             }
 
             [Fact]
@@ -83,7 +87,7 @@ namespace Tests.Services
                 store.Name = "Store Name";
                 store.Address = string.Empty;
                 var response = _service.Save(store);
-                Assert.Contains(response.Messages, m => m.Contains("O Endereço não pode ser vazio"));
+                Assert.Contains(response.Messages, m => m.Contains(ADDRESS_VALIDATION_MESSAGE));
             }
 
             [Fact]
@@ -93,7 +97,7 @@ namespace Tests.Services
                 store.Name = "Store Name";
                 store.Address = " ";
                 var response = _service.Save(store);
-                Assert.Contains(response.Messages, m => m.Contains("O Endereço não pode ser vazio"));
+                Assert.Contains(response.Messages, m => m.Contains(ADDRESS_VALIDATION_MESSAGE));
             }
         }
 
