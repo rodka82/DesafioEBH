@@ -11,14 +11,14 @@ namespace Tests.Services
         protected override void ConfigureUpdate(Mock<IRepository<Product>> repository)
         {
             repository.Setup(r => r.Update(It.IsAny<Product>()))
-                            .Returns((Product Product) =>
+                            .Returns((Product product) =>
                             {
                                 var existentProduct = _databaseEntities.First(s => s.Id == 1);
-                                existentProduct.Name = Product.Name;
-                                existentProduct.Price = Product.Price;
+                                existentProduct.Name = product.Name;
+                                existentProduct.Price = product.Price;
                                 return true;
                             })
-                            .Callback<Product>(Product => Product.Id = 1);
+                            .Callback<Product>(product => product.Id = 1);
         }
     }
 }
