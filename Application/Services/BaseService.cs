@@ -37,7 +37,7 @@ namespace Application.Services
             return ReturnSuccessResponse();
         }
 
-        private IApplicationResponse ReturnSuccessResponse()
+        protected IApplicationResponse ReturnSuccessResponse()
         {
             return new ApplicationResponse
             {
@@ -46,7 +46,7 @@ namespace Application.Services
             };
         }
 
-        private IApplicationResponse ReturnValidationErrorResponse()
+        protected IApplicationResponse ReturnValidationErrorResponse()
         {
             return new ApplicationResponse
             {

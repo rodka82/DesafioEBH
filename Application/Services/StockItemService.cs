@@ -11,33 +11,39 @@ namespace Application.Services
 {
     public class StockItemService : BaseService<StockItem>, IStockItemService
     {
-        public StockItemService(IValidator<StockItem> validator, IRepository<StockItem> repository)
+        protected readonly new IStockItemValidator _validator;
+        public StockItemService(IStockItemValidator validator, IRepository<StockItem> repository)
             :base(validator, repository)
         {
+            _validator = validator;
         }
 
-        public IApplicationResponse UpdateStock(StockItem stockItem)
+        public IApplicationResponse UpdateStock(StockOperation operation)
         {
-            var existentStockItem = _repository.GetById(stockItem.Id);
-            UpdateQuantity(stockItem, existentStockItem);
+            var existentStockItem = _repository.GetById(operation.StockItemId);
+            
+            _validator.Validate(operation, existentStockItem);
+
+            if (!_validator.IsValid)
+                return ReturnValidationErrorResponse();
+
+            UpdateQuantity(operation, existentStockItem);
+            
             _repository.Update(existentStockItem);
-            //TODO: acertar isso
-            return new ApplicationResponse();
+            
+            return ReturnSuccessResponse();
         }
 
-        private static void UpdateQuantity(StockItem stockItem, StockItem existentStockItem)
+        private void UpdateQuantity(StockOperation operation, StockItem existentStockItem)
         {
-            if (stockItem.OperationType == OperationType.Increment)
-                existentStockItem.Quantity += stockItem.Quantity;
-            else if (stockItem.OperationType == OperationType.Decrement)
-                Decrement(stockItem, existentStockItem);
-
-        }
-
-        private static void Decrement(StockItem stockItem, StockItem existentStockItem)
-        {
-            existentStockItem.Quantity -= stockItem.Quantity;
-            existentStockItem.Quantity = existentStockItem.Quantity < 0 ? 0 : existentStockItem.Quantity;
+            if (operation.OperationType == OperationType.Increment)
+            {
+                existentStockItem.Quantity += operation.Quantity;
+            }            
+            else if (operation.OperationType == OperationType.Decrement)
+            {
+                existentStockItem.Quantity -= operation.Quantity;
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Application.Validators
 {
-    public class StockItemValidator : Validator<StockItem>
+    public class StockItemValidator : Validator<StockItem>, IStockItemValidator
     {
         public override void Validate(StockItem stockItem)
         {
@@ -16,6 +16,28 @@ namespace Application.Validators
             ValidateProduct(stockItem);
 
             SetValidity();
+        }
+
+        public void Validate(StockOperation operation, StockItem stockItem)
+        {
+            if(operation.OperationType == OperationType.Increment)
+                ValidateIncrement(operation);
+            else
+                ValidateDecrement(operation, stockItem);
+
+            SetValidity();
+        }
+
+        private void ValidateIncrement(StockOperation operation)
+        {
+            if (operation.Quantity < 0)
+                ErrorMessages.Add("É necessário informar um valor positivo para a quantidade.");
+        }
+
+        private void ValidateDecrement(StockOperation operation, StockItem stockItem)
+        {
+            if(operation.Quantity > stockItem.Quantity)
+                ErrorMessages.Add("Não há quantidade suficiente do produto. Informe um valor menor.");
         }
 
         private void ValidateProduct(StockItem stockItem)

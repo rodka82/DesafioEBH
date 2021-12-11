@@ -6,6 +6,6 @@ namespace Application.Services
 {
     public interface IStockItemService : IService<StockItem>
     {
-        IApplicationResponse UpdateStock(StockItem stockitem);
+        IApplicationResponse UpdateStock(StockOperation stockitem);
     }
 }

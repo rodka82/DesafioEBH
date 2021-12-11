@@ -13,7 +13,7 @@ namespace Tests.Services
 {
     public class StockItemServiceTest : BaseStockItemServiceTest
     {
-        protected readonly IValidator<StockItem> _validator;
+        protected readonly IStockItemValidator _validator;
         protected readonly IStockItemService _service;
 
         public StockItemServiceTest()
@@ -29,7 +29,6 @@ namespace Tests.Services
             stockItem.Product = new Product { Id = 1, Name = "Nome Produto", Price = 9.5 };
             stockItem.Store = new Store { Id = 1, Name = "Nome Loja" };
             stockItem.Quantity = 10;
-            stockItem.OperationType = OperationType.Increment;
             return stockItem;
         }
 
@@ -70,6 +69,7 @@ namespace Tests.Services
                 Assert.Equal("Nome Produto", result.Product.Name);
                 Assert.Equal("Nome Loja", result.Store.Name);
                 Assert.Equal(10, result.Quantity);
+
                 ResetRepository();
             }
         }
@@ -83,18 +83,17 @@ namespace Tests.Services
 
                 _service.Save(stockItem);
 
-                var stockItemToUpdate = GenerateValidStockItem();
-                stockItemToUpdate.Id = 1;
-                stockItemToUpdate.Quantity = 50;
+                var stockOperation = new StockOperation();
+                stockOperation.StockItemId = 1;
+                stockOperation.OperationType = OperationType.Increment;
+                stockOperation.Quantity = 50;
 
-                _service.UpdateStock(stockItemToUpdate);
+                _service.UpdateStock(stockOperation);
 
                 var result = _repository.GetById(1);
 
                 Assert.NotNull(result);
                 Assert.IsType<StockItem>(result);
-                Assert.Equal("Nome Produto", result.Product.Name);
-                Assert.Equal("Nome Loja", result.Store.Name);
                 Assert.Equal(60, result.Quantity);
 
                 ResetRepository();
@@ -108,20 +107,64 @@ namespace Tests.Services
 
                 _service.Save(stockItem);
 
-                var stockItemToUpdate = GenerateValidStockItem();
-                stockItemToUpdate.Id = 1;
-                stockItemToUpdate.Quantity = 50;
-                stockItemToUpdate.OperationType = OperationType.Decrement;
+                var stockOperation = new StockOperation();
+                stockOperation.StockItemId = 1;
+                stockOperation.OperationType = OperationType.Decrement;
+                stockOperation.Quantity = 10;
 
-                _service.UpdateStock(stockItemToUpdate);
+                _service.UpdateStock(stockOperation);
 
                 var result = _repository.GetById(1);
 
                 Assert.NotNull(result);
                 Assert.IsType<StockItem>(result);
-                Assert.Equal("Nome Produto", result.Product.Name);
-                Assert.Equal("Nome Loja", result.Store.Name);
                 Assert.Equal(0, result.Quantity);
+
+                ResetRepository();
+            }
+
+            [Fact]
+            public void ShouldPreventDecrementIfOperationQuantityHigherThanExistentQuantity()
+            {
+                var stockItem = GenerateValidStockItem();
+
+                _service.Save(stockItem);
+
+                var stockOperation = new StockOperation();
+                stockOperation.StockItemId = 1;
+                stockOperation.OperationType = OperationType.Decrement;
+                stockOperation.Quantity = 50;
+
+                var response = _service.UpdateStock(stockOperation);
+
+                var result = _repository.GetById(1);
+
+                Assert.NotNull(result);
+                Assert.IsType<StockItem>(result);
+                Assert.Contains(response.Messages, m => m.Contains("Não há quantidade suficiente do produto. Informe um valor menor."));
+
+                ResetRepository();
+            }
+
+            [Fact]
+            public void ShouldPreventIncrementIfOperationQuantityLessThanZero()
+            {
+                var stockItem = GenerateValidStockItem();
+
+                _service.Save(stockItem);
+
+                var stockOperation = new StockOperation();
+                stockOperation.StockItemId = 1;
+                stockOperation.OperationType = OperationType.Increment;
+                stockOperation.Quantity = -50;
+
+                var response = _service.UpdateStock(stockOperation);
+
+                var result = _repository.GetById(1);
+
+                Assert.NotNull(result);
+                Assert.IsType<StockItem>(result);
+                Assert.Contains(response.Messages, m => m.Contains("É necessário informar um valor positivo para a quantidade."));
 
                 ResetRepository();
             }
