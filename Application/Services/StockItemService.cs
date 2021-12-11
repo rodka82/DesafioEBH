@@ -31,7 +31,7 @@ namespace Application.Services
             
             _repository.Update(existentStockItem);
             
-            return ReturnSuccessResponse();
+            return ReturnSuccessResponse("Estoque alterado com sucesso");
         }
 
         private void UpdateQuantity(StockOperation operation, StockItem existentStockItem)

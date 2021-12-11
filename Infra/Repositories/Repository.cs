@@ -24,6 +24,9 @@ namespace Infra.Repositories
                 return false;
 
             _entities.Add(entity);
+
+            _context.SaveChanges();
+
             return true;
         }
 
@@ -33,6 +36,8 @@ namespace Infra.Repositories
                 return false;
 
             _entities.Remove(entity);
+
+            _context.SaveChanges();
             return true;
         }
 
@@ -47,6 +52,8 @@ namespace Infra.Repositories
                 return false;
 
             _entities.Update(entity);
+            
+            _context.SaveChanges();
             return true;
         }
     }

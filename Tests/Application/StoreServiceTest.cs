@@ -32,9 +32,16 @@ namespace Tests.Services
         }
 
         [Fact]
-        public void ShouldValidateNullObject()
+        public void ShouldValidateNullObjectOnSave()
         {
             var response = _service.Save(null);
+            Assert.Contains(response.Messages, m => m.Contains("Nenhuma loja foi informada"));
+        }
+
+        [Fact]
+        public void ShouldValidateNullObjectOnDelete()
+        {
+            var response = _service.Delete(null);
             Assert.Contains(response.Messages, m => m.Contains("Nenhuma loja foi informada"));
         }
 

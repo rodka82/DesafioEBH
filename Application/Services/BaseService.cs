@@ -34,25 +34,7 @@ namespace Application.Services
 
             AddOrUpdate(entity);
 
-            return ReturnSuccessResponse();
-        }
-
-        protected IApplicationResponse ReturnSuccessResponse()
-        {
-            return new ApplicationResponse
-            {
-                IsValid = _validator.IsValid,
-                Messages = new List<string> { "Registro salvo com sucesso" }
-            };
-        }
-
-        protected IApplicationResponse ReturnValidationErrorResponse()
-        {
-            return new ApplicationResponse
-            {
-                IsValid = _validator.IsValid,
-                Messages = _validator.ErrorMessages
-            };
+            return ReturnSuccessResponse("Registro salvo com sucesso");
         }
 
         protected void AddOrUpdate(T entity)
@@ -65,11 +47,33 @@ namespace Application.Services
 
         public IApplicationResponse Delete(T entity)
         {
-            if (entity == null || entity.Id <= 0)
-                ReturnValidationErrorResponse();
+            _validator.Validate(entity);
+
+            if (!_validator.IsValid)
+                return ReturnValidationErrorResponse();
 
             _repository.Delete(entity);
-            return ReturnSuccessResponse();
+
+            return ReturnSuccessResponse("Registro removido com sucesso");
+        }
+
+        protected IApplicationResponse ReturnSuccessResponse(string message, BaseEntity entity = null)
+        {
+            return new ApplicationResponse
+            {
+                Result = entity,
+                IsValid = _validator.IsValid,
+                Messages = new List<string> { message }
+            };
+        }
+
+        protected IApplicationResponse ReturnValidationErrorResponse()
+        {
+            return new ApplicationResponse
+            {
+                IsValid = _validator.IsValid,
+                Messages = _validator.ErrorMessages
+            };
         }
     }
 }

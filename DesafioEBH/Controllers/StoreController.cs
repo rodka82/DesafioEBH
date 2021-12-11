@@ -31,13 +31,25 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult GetById(int id)
         {
-            var store = _storeService.GetById(id);
-            var dto = _mapper.Map<StoreDTO>(store);
-            var response = ReturnSuccessResponse(dto);
-            return Ok(response);
+            IApplicationResponse result = new ApplicationResponse();
+
+            try
+            {
+                var store = _storeService.GetById(id);
+                var dto = _mapper.Map<StoreDTO>(store);
+                var response = ReturnSuccessResponse(dto);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                AddUserFriendlyErrorMessage(result);
+                _logger.LogError($"Ocorreu um erro interno: { e.Message } {e.StackTrace}");
+                return StatusCode(StatusCodes.Status500InternalServerError, ReturnApiResponse(result));
+            }
         }
 
         [HttpPost]
+        [HttpPut]
         public IActionResult Save(Store store)
         {
             IApplicationResponse result = new ApplicationResponse();
@@ -53,12 +65,6 @@ namespace API.Controllers
                 _logger.LogError($"Ocorreu um erro interno: { e.Message } {e.StackTrace}");
                 return StatusCode(StatusCodes.Status500InternalServerError, ReturnApiResponse(result));
             }
-        }
-
-        [HttpPut]
-        public IActionResult Update(Store store)
-        {
-            return Save(store);
         }
 
         [HttpPut]
