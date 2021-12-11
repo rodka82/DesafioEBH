@@ -1,4 +1,5 @@
-﻿using Application.Services;
+﻿using API.Utils;
+using Application.Services;
 using Application.Utils;
 using AutoMapper;
 using Domain.DTOs;
@@ -7,16 +8,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class StoreController : ApplicationBaseController
+    public class ProductController : ApplicationBaseController
     {
-        private readonly IService<Store> _storeService;
+        private readonly IService<Product> _storeService;
 
-        public StoreController(IService<Store> storeService, IMapper mapper, ILogger<ApplicationBaseController> logger)
+        public ProductController(IService<Product> storeService, IMapper mapper, ILogger<ApplicationBaseController> logger)
             :base(mapper, logger)
         {
             _storeService = storeService;
@@ -29,8 +33,8 @@ namespace API.Controllers
 
             try
             {
-                var store = _storeService.GetById(id);
-                var dto = _mapper.Map<StoreDTO>(store);
+                var product = _storeService.GetById(id);
+                var dto = _mapper.Map<ProductDTO>(product);
                 var response = ReturnSuccessResponse(dto);
                 return Ok(response);
             }
@@ -44,31 +48,31 @@ namespace API.Controllers
 
         [HttpPost]
         [HttpPut]
-        public IActionResult Save(Store store)
+        public IActionResult Save(Product product)
         {
             IApplicationResponse result = new ApplicationResponse();
 
             try
             {
-                result = _storeService.Save(store);
+                result = _storeService.Save(product);
                 return SetStatusCode(result);
             }
             catch (Exception e)
             {
                 AddUserFriendlyErrorMessage(result);
-                _logger.LogError($"Ocorreu um erro interno: { e.Message } {e.StackTrace}");
+                LogError(e);
                 return StatusCode(StatusCodes.Status500InternalServerError, ReturnApiResponse(result));
             }
         }
 
         [HttpDelete]
-        public IActionResult Delete(Store store)
+        public IActionResult Delete(Product product)
         {
             IApplicationResponse result = new ApplicationResponse();
 
             try
             {
-                result = _storeService.Delete(store);
+                result = _storeService.Delete(product);
                 return SetStatusCode(result);
             }
             catch (Exception)

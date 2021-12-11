@@ -16,17 +16,14 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class StockItemController : Controller
+    public class StockItemController : ApplicationBaseController
     {
         private readonly IStockItemService _storeService;
-        private readonly IMapper _mapper;
-        private readonly ILogger<StockItemController> _logger;
 
-        public StockItemController(IStockItemService storeService, IMapper mapper, ILogger<StockItemController> logger)
+        public StockItemController(IStockItemService storeService, IMapper mapper, ILogger<ApplicationBaseController> logger)
+            : base(mapper, logger)
         {
             _storeService = storeService;
-            _mapper = mapper;
-            _logger = logger;
         }
 
         [HttpGet]
@@ -62,7 +59,7 @@ namespace API.Controllers
             return Save(stockItem);
         }
 
-        [HttpPut]
+        [HttpDelete]
         public IActionResult Delete(StockItem stockItem)
         {
             IApplicationResponse result = new ApplicationResponse();
