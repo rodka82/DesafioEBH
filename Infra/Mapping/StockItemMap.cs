@@ -12,10 +12,7 @@ namespace Infra.Mapping
             builder.ToTable("StockItem");
 
             builder.HasKey(e => e.Id);
-
-            builder.Property(e => e.Id)
-                 .HasColumnName("Id")
-                 .IsRequired();
+            builder.HasAlternateKey(e => new { e.ProductId, e.StoreId });
 
             builder.HasOne(e => e.Product);
 

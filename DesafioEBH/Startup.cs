@@ -54,7 +54,7 @@ namespace DesafioEBH
             services.AddScoped<IService<Product>, ProductService>();
 
             services.AddScoped<IRepository<Store>, Repository<Store>>();
-            services.AddScoped<IRepository<StockItem>, Repository<StockItem>>();
+            services.AddScoped<IRepository<StockItem>, StockItemRepository>();
             services.AddScoped<IRepository<Product>, Repository<Product>>();
         }
 
@@ -138,6 +138,38 @@ namespace DesafioEBH
             };
 
             context.Stores.AddRange(store1, store2, store3);
+
+            var stockItem1 = new StockItem()
+            {
+                Id = 1,
+                Product = product1,
+                Store = store1,
+                ProductId = product1.Id,
+                StoreId = store1.Id,
+                Quantity = 10
+            };
+
+            var stockItem2 = new StockItem()
+            {
+                Id = 2,
+                Product = product2,
+                Store = store2,
+                ProductId = product2.Id,
+                StoreId = store2.Id,
+                Quantity = 20
+            };
+
+            var stockItem3 = new StockItem()
+            {
+                Id = 3,
+                Product = product3,
+                Store = store3,
+                ProductId = product3.Id,
+                StoreId = store3.Id,
+                Quantity = 30
+            };
+
+            context.StockItems.AddRange(stockItem1, stockItem2, stockItem3);
 
             context.SaveChanges();
         }

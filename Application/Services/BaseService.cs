@@ -44,16 +44,7 @@ namespace Application.Services
                 _repository.Add(entity);
             else
             {
-                var existentEntity = _repository.GetById(entity.Id);
-
-                if (existentEntity == null)
-                {
-                    _validator.ErrorMessages.Add(NOT_FOUND_MESSAGE);
-                    return ReturnValidationErrorResponse();
-                }
-                
-                existentEntity = entity;
-                _repository.Update(existentEntity);
+                _repository.Update(entity);
             }
 
             return ReturnSuccessResponse(null, entity);

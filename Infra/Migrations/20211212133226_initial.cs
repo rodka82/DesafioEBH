@@ -40,31 +40,27 @@ namespace Infra.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    StoreId = table.Column<int>(type: "INTEGER", nullable: true),
-                    ProductId = table.Column<int>(type: "INTEGER", nullable: true),
+                    StoreId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StockItem", x => x.Id);
+                    table.UniqueConstraint("AK_StockItem_ProductId_StoreId", x => new { x.ProductId, x.StoreId });
                     table.ForeignKey(
                         name: "FK_StockItem_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_StockItem_Store_StoreId",
                         column: x => x.StoreId,
                         principalTable: "Store",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StockItem_ProductId",
-                table: "StockItem",
-                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StockItem_StoreId",

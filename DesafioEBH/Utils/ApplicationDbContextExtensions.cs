@@ -12,7 +12,6 @@ namespace API.Utils
         {
             if (context != null)
             {
-                context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
             }
         }

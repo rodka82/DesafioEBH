@@ -48,6 +48,14 @@ namespace API.Controllers
         {
             IApplicationResponse result = new ApplicationResponse();
 
+            if (store.Id != 0)
+            {
+                result.IsValid = false;
+                result.Messages = new List<string>() { "Não se pode adicionar uma loja especificando um Id." };
+
+                return BadRequest(result);
+            }
+
             try
             {
                 result = _storeService.Save(store);
@@ -64,16 +72,26 @@ namespace API.Controllers
         [HttpPut]
         public IActionResult Update(Store store)
         {
+            IApplicationResponse result = new ApplicationResponse();
             if (store.Id == 0)
             {
-                IApplicationResponse result = new ApplicationResponse();
                 result.IsValid = false;
                 result.Messages = new List<string>() { "Informe um Id para alteração" };
 
                 return BadRequest(result);
             }
 
-            return Save(store);
+            try
+            {
+                result = _storeService.Save(store);
+                return SetStatusCode(result);
+            }
+            catch (Exception e)
+            {
+                AddUserFriendlyErrorMessage(result);
+                LogError(e);
+                return StatusCode(StatusCodes.Status500InternalServerError, ReturnApiResponse(result));
+            }
         }
 
         [HttpDelete]

@@ -45,7 +45,7 @@ namespace Application.Validators
 
         private void ValidateProduct(StockItem stockItem)
         {
-            if (stockItem.Product == null)
+            if (stockItem.ProductId == 0)
             {
                 ErrorMessages.Add("Um produto deve ser associado a este Item");
             }
@@ -53,7 +53,7 @@ namespace Application.Validators
 
         private void ValidateStore(StockItem stockItem)
         {
-            if (stockItem.Store == null)
+            if (stockItem.StoreId == 0)
             {
                 ErrorMessages.Add("Uma loja deve ser associada a este Item");
             }

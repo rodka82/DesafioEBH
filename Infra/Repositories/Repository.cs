@@ -19,7 +19,7 @@ namespace Infra.Repositories
             _context = context;
             _entities = _context.Set<T>();
         }
-        public bool Add(T entity)
+        public virtual bool Add(T entity)
         {
             if (entity == null)
                 return false;
@@ -42,7 +42,7 @@ namespace Infra.Repositories
             return true;
         }
 
-        public T GetById(int id)
+        public virtual T GetById(int id)
         {
             return _entities.Find(id);
         }

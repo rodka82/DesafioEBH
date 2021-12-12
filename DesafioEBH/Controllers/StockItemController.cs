@@ -29,20 +29,39 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult GetById(int id)
         {
-            var stockItem = _storeService.GetById(id);
-            var dto = _mapper.Map<StockItemDTO>(stockItem);
-            var response = ReturnSuccessResponse(dto);
-            return SetStatusCodeForSearch(response);
-        }
-
-        [HttpPost]
-        public IActionResult Save(StockItem store)
-        {
             IApplicationResponse result = new ApplicationResponse();
 
             try
             {
-                result = _storeService.Save(store);
+                var product = _storeService.GetById(id);
+                var dto = _mapper.Map<StockItemDTO>(product);
+                var response = ReturnSuccessResponse(dto);
+                return SetStatusCodeForSearch(response);
+            }
+            catch (Exception e)
+            {
+                AddUserFriendlyErrorMessage(result);
+                _logger.LogError($"Ocorreu um erro interno: { e.Message } {e.StackTrace}");
+                return StatusCode(StatusCodes.Status500InternalServerError, ReturnApiResponse(result));
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Save(StockItem stockItem)
+        {
+            IApplicationResponse result = new ApplicationResponse();
+
+            if (stockItem.Id != 0)
+            {
+                result.IsValid = false;
+                result.Messages = new List<string>() { "Não se pode adicionar um item de estoque especificando um Id." };
+
+                return BadRequest(result);
+            }
+
+            try
+            {
+                result = _storeService.Save(stockItem);
                 return SetStatusCode(result);
             }
             catch (Exception e)
@@ -54,28 +73,13 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public IActionResult Update(StockItem stockItem)
-        {
-            if (stockItem.Id == 0)
-            {
-                IApplicationResponse result = new ApplicationResponse();
-                result.IsValid = false;
-                result.Messages = new List<string>() { "Informe um Id para alteração" };
-
-                return BadRequest(result);
-            }
-
-            return Save(stockItem);
-        }
-
-        [HttpDelete]
-        public IActionResult Delete(StockItem stockItem)
+        public IActionResult Update(StockOperation stockOperation)
         {
             IApplicationResponse result = new ApplicationResponse();
 
             try
             {
-                result = _storeService.Delete(stockItem);
+                result = _storeService.UpdateStock(stockOperation);
                 return SetStatusCode(result);
             }
             catch (Exception e)

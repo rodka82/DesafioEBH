@@ -52,6 +52,14 @@ namespace API.Controllers
         {
             IApplicationResponse result = new ApplicationResponse();
 
+            if (product.Id != 0)
+            {
+                result.IsValid = false;
+                result.Messages = new List<string>() { "Não se pode adicionar um produto especificando um Id." };
+
+                return BadRequest(result);
+            }
+
             try
             {
                 result = _storeService.Save(product);
@@ -68,16 +76,27 @@ namespace API.Controllers
         [HttpPut]
         public IActionResult Update(Product product)
         {
+            IApplicationResponse result = new ApplicationResponse();
+
             if (product.Id == 0)
             {
-                IApplicationResponse result = new ApplicationResponse();
                 result.IsValid = false;
                 result.Messages = new List<string>() { "Informe um Id para alteração" };
 
                 return BadRequest(result);
             }
 
-            return Save(product);
+            try
+            {
+                result = _storeService.Save(product);
+                return SetStatusCode(result);
+            }
+            catch (Exception e)
+            {
+                AddUserFriendlyErrorMessage(result);
+                LogError(e);
+                return StatusCode(StatusCodes.Status500InternalServerError, ReturnApiResponse(result));
+            }
         }
 
         [HttpDelete]

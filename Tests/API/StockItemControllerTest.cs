@@ -37,25 +37,13 @@ namespace Tests.Controllers
         }
 
         [Fact]
-        public void ShouldReturnApiResponseWrappingGetByIdResult()
-        {
-            _stockItemService.Setup(s => s.GetById(It.IsAny<int>())).Returns(_stockItem);
-
-            var result = _controller.GetById(1);
-            var objectResult = (OkObjectResult)result;
-            var response = (ApplicationResponse)objectResult.Value;
-
-            Assert.IsType<ApplicationResponse>(response);
-        }
-
-        [Fact]
         public void ShouldReturnApiResponseWrappingErrorMessagesOnInvalidSave()
         {
             _stockItemService.Setup(s => s.Save(It.IsAny<StockItem>()))
                 .Returns(new ApplicationResponse()
                 {
                     IsValid = false,
-                    Messages = new List<string> { "Nome da Loja deve ser preenchido" }
+                    Messages = new List<string> { "" }
                 });
 
             var result = _controller.Save(_stockItem);
@@ -73,24 +61,6 @@ namespace Tests.Controllers
                 .Returns(() => throw new ApplicationException());
 
             var result = _controller.Save(_stockItem);
-            var objectResult = (ObjectResult)result;
-            var response = (ApplicationResponse)objectResult.Value;
-
-            Assert.IsType<ApplicationResponse>(response);
-            Assert.True(response.Messages.Any());
-        }
-
-        [Fact]
-        public void ShouldReturnApiResponseWrappingMessagesOnDelete()
-        {
-            _stockItemService.Setup(s => s.Delete(It.IsAny<StockItem>()))
-                .Returns(new ApplicationResponse()
-                {
-                    IsValid = true,
-                    Messages = new List<string> { "Registro removido com sucesso" }
-                });
-
-            var result = _controller.Delete(_stockItem);
             var objectResult = (ObjectResult)result;
             var response = (ApplicationResponse)objectResult.Value;
 
