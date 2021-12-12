@@ -25,7 +25,7 @@ namespace Application.Services
             _validator.Validate(operation, existentStockItem);
 
             if (!_validator.IsValid)
-                return ReturnValidationErrorResponse();
+                return ReturnValidationErrorResponse(existentStockItem);
 
             UpdateQuantity(operation, existentStockItem);
             
@@ -36,11 +36,11 @@ namespace Application.Services
 
         private void UpdateQuantity(StockOperation operation, StockItem existentStockItem)
         {
-            if (operation.OperationType == OperationType.Increment)
+            if (operation.OperationType == StockOperationType.Increment)
             {
                 existentStockItem.Quantity += operation.Quantity;
             }            
-            else if (operation.OperationType == OperationType.Decrement)
+            else if (operation.OperationType == StockOperationType.Decrement)
             {
                 existentStockItem.Quantity -= operation.Quantity;
             }

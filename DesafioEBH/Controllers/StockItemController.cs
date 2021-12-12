@@ -16,11 +16,11 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class StockItemController : ApplicationBaseController
+    public class StockItemController : ApplicationBaseController<StockItemDTO>
     {
         private readonly IStockItemService _storeService;
 
-        public StockItemController(IStockItemService storeService, IMapper mapper, ILogger<ApplicationBaseController> logger)
+        public StockItemController(IStockItemService storeService, IMapper mapper, ILogger<StockItemController> logger)
             : base(mapper, logger)
         {
             _storeService = storeService;
@@ -32,7 +32,7 @@ namespace API.Controllers
             var stockItem = _storeService.GetById(id);
             var dto = _mapper.Map<StockItemDTO>(stockItem);
             var response = ReturnSuccessResponse(dto);
-            return Ok(response);
+            return SetStatusCodeForSearch(response);
         }
 
         [HttpPost]
@@ -48,7 +48,7 @@ namespace API.Controllers
             catch (Exception e)
             {
                 AddUserFriendlyErrorMessage(result);
-                _logger.LogError($"Ocorreu um erro interno: { e.Message } {e.StackTrace}");
+                LogError(e);
                 return StatusCode(StatusCodes.Status500InternalServerError, ReturnApiResponse(result));
             }
         }
@@ -56,6 +56,15 @@ namespace API.Controllers
         [HttpPut]
         public IActionResult Update(StockItem stockItem)
         {
+            if (stockItem.Id == 0)
+            {
+                IApplicationResponse result = new ApplicationResponse();
+                result.IsValid = false;
+                result.Messages = new List<string>() { "Informe um Id para alteração" };
+
+                return BadRequest(result);
+            }
+
             return Save(stockItem);
         }
 
@@ -69,53 +78,12 @@ namespace API.Controllers
                 result = _storeService.Delete(stockItem);
                 return SetStatusCode(result);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 AddUserFriendlyErrorMessage(result);
+                LogError(e);
                 return StatusCode(StatusCodes.Status500InternalServerError, ReturnApiResponse(result));
             }
-        }
-
-        private IActionResult SetStatusCode(IApplicationResponse result)
-        {
-            if (result.Result != null)
-                return Ok(ReturnApiResponse(result));
-            else
-                return BadRequest(ReturnApiResponse(result));
-        }
-
-        private static void AddUserFriendlyErrorMessage(IApplicationResponse result)
-        {
-            result.Messages.Add("Houve um erro ao processar sua solicitação");
-        }
-
-        private ApiResponse ReturnApiResponse(IApplicationResponse result)
-        {
-            var response = _mapper.Map<ApiResponse>(result);
-            if (result.Result != null)
-            {
-                response.Result = _mapper.Map<StoreDTO>(result.Result);
-                response.StatusCode = GetStatusCode(response);
-            }
-            else
-            {
-                response.StatusCode = 500;
-            }
-            return response;
-        }
-
-        private static int GetStatusCode(ApiResponse response)
-        {
-            return response.Messages.Any() ? 400 : 200;
-        }
-
-        private ApiResponse ReturnSuccessResponse(StockItemDTO dto)
-        {
-            return new ApiResponse
-            {
-                Result = dto,
-                StatusCode = 200,
-            };
         }
     }
 }

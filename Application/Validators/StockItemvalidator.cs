@@ -23,7 +23,7 @@ namespace Application.Validators
 
         public void Validate(StockOperation operation, StockItem stockItem)
         {
-            if(operation.OperationType == OperationType.Increment)
+            if(operation.OperationType == StockOperationType.Increment)
                 ValidateIncrement(operation);
             else
                 ValidateDecrement(operation, stockItem);

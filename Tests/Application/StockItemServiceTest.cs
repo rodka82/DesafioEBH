@@ -32,20 +32,22 @@ namespace Tests.Services
             return stockItem;
         }
 
-        [Fact]
-        public void ShouldValidateNullObjectOnSave()
+        public class BasicValidation : StockItemServiceTest
         {
-            var response = _service.Save(null);
-            Assert.Contains(response.Messages, m => m.Contains("Nenhum item foi informado"));
-        }
+            [Fact]
+            public void ShouldValidateNullObjectOnSave()
+            {
+                var response = _service.Save(null);
+                Assert.Contains(response.Messages, m => m.Contains("Nenhum item foi informado"));
+            }
 
-        [Fact]
-        public void ShouldValidateNullObjectOnDelete()
-        {
-            var response = _service.Delete(null);
-            Assert.Contains(response.Messages, m => m.Contains("Nenhum item foi informado"));
+            [Fact]
+            public void ShouldValidateNullObjectOnDelete()
+            {
+                var response = _service.Delete(null);
+                Assert.Contains(response.Messages, m => m.Contains("Nenhum registro foi informado para remoção."));
+            }
         }
-
         public class AssociationtValidation : StockItemServiceTest
         {
             [Fact]
@@ -99,7 +101,7 @@ namespace Tests.Services
 
                 var stockOperation = new StockOperation();
                 stockOperation.StockItemId = 1;
-                stockOperation.OperationType = OperationType.Increment;
+                stockOperation.OperationType = StockOperationType.Increment;
                 stockOperation.Quantity = 50;
 
                 _service.UpdateStock(stockOperation);
@@ -123,7 +125,7 @@ namespace Tests.Services
 
                 var stockOperation = new StockOperation();
                 stockOperation.StockItemId = 1;
-                stockOperation.OperationType = OperationType.Decrement;
+                stockOperation.OperationType = StockOperationType.Decrement;
                 stockOperation.Quantity = 10;
 
                 _service.UpdateStock(stockOperation);
@@ -146,7 +148,7 @@ namespace Tests.Services
 
                 var stockOperation = new StockOperation();
                 stockOperation.StockItemId = 1;
-                stockOperation.OperationType = OperationType.Decrement;
+                stockOperation.OperationType = StockOperationType.Decrement;
                 stockOperation.Quantity = 50;
 
                 var response = _service.UpdateStock(stockOperation);
@@ -169,7 +171,7 @@ namespace Tests.Services
 
                 var stockOperation = new StockOperation();
                 stockOperation.StockItemId = 1;
-                stockOperation.OperationType = OperationType.Increment;
+                stockOperation.OperationType = StockOperationType.Increment;
                 stockOperation.Quantity = -50;
 
                 var response = _service.UpdateStock(stockOperation);

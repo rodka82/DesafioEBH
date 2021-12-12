@@ -7,16 +7,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class StoreController : ApplicationBaseController
+    public class StoreController : ApplicationBaseController<StoreDTO>
     {
         private readonly IService<Store> _storeService;
 
-        public StoreController(IService<Store> storeService, IMapper mapper, ILogger<ApplicationBaseController> logger)
+        public StoreController(IService<Store> storeService, IMapper mapper, ILogger<StoreController> logger)
             :base(mapper, logger)
         {
             _storeService = storeService;
@@ -32,7 +33,7 @@ namespace API.Controllers
                 var store = _storeService.GetById(id);
                 var dto = _mapper.Map<StoreDTO>(store);
                 var response = ReturnSuccessResponse(dto);
-                return Ok(response);
+                return SetStatusCodeForSearch(response);
             }
             catch (Exception e)
             {
@@ -43,7 +44,6 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [HttpPut]
         public IActionResult Save(Store store)
         {
             IApplicationResponse result = new ApplicationResponse();
@@ -56,9 +56,24 @@ namespace API.Controllers
             catch (Exception e)
             {
                 AddUserFriendlyErrorMessage(result);
-                _logger.LogError($"Ocorreu um erro interno: { e.Message } {e.StackTrace}");
+                LogError(e);
                 return StatusCode(StatusCodes.Status500InternalServerError, ReturnApiResponse(result));
             }
+        }
+
+        [HttpPut]
+        public IActionResult Update(Store store)
+        {
+            if (store.Id == 0)
+            {
+                IApplicationResponse result = new ApplicationResponse();
+                result.IsValid = false;
+                result.Messages = new List<string>() { "Informe um Id para alteração" };
+
+                return BadRequest(result);
+            }
+
+            return Save(store);
         }
 
         [HttpDelete]
@@ -71,9 +86,10 @@ namespace API.Controllers
                 result = _storeService.Delete(store);
                 return SetStatusCode(result);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 AddUserFriendlyErrorMessage(result);
+                LogError(e);
                 return StatusCode(StatusCodes.Status500InternalServerError, ReturnApiResponse(result));
             }
         }

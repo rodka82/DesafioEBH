@@ -29,7 +29,6 @@ namespace Infra.Mapping
             builder.Property(e => e.Price)
                  .HasColumnName("Price")
                  .IsRequired();
-
         }
     }
 }

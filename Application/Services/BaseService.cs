@@ -10,6 +10,9 @@ namespace Application.Services
 {
     public class BaseService<T> : IService<T> where T: BaseEntity
     {
+        private const string NOT_FOUND_MESSAGE = "Nenhum registro foi encontrado com o Id informado.";
+        private const string NULL_ENTITY_MESSAGE = "Nenhum registro foi informado para remoção.";
+
         protected readonly IValidator<T> _validator;
         protected readonly IRepository<T> _repository;
 
@@ -30,47 +33,69 @@ namespace Application.Services
             _validator.Validate(entity);
 
             if (!_validator.IsValid)
-                return ReturnValidationErrorResponse();
+                return ReturnValidationErrorResponse(entity);
 
-            AddOrUpdate(entity);
-
-            return ReturnSuccessResponse("Registro salvo com sucesso");
+            return AddOrUpdate(entity);
         }
 
-        protected void AddOrUpdate(T entity)
+        protected IApplicationResponse AddOrUpdate(T entity)
         {
             if (entity.Id == 0)
                 _repository.Add(entity);
             else
-                _repository.Update(entity);
+            {
+                var existentEntity = _repository.GetById(entity.Id);
+
+                if (existentEntity == null)
+                {
+                    _validator.ErrorMessages.Add(NOT_FOUND_MESSAGE);
+                    return ReturnValidationErrorResponse();
+                }
+                
+                existentEntity = entity;
+                _repository.Update(existentEntity);
+            }
+
+            return ReturnSuccessResponse(null, entity);
         }
 
         public IApplicationResponse Delete(T entity)
         {
-            _validator.Validate(entity);
-
-            if (!_validator.IsValid)
+            if (entity == null)
+            {
+                _validator.ErrorMessages.Add(NULL_ENTITY_MESSAGE);
                 return ReturnValidationErrorResponse();
+            }
 
-            _repository.Delete(entity);
+            var existentEntity = _repository.GetById(entity.Id);
 
-            return ReturnSuccessResponse("Registro removido com sucesso");
+            if(existentEntity == null)
+            {
+                _validator.ErrorMessages.Add(NOT_FOUND_MESSAGE);
+                return ReturnValidationErrorResponse();
+            }
+
+            _validator.IsValid = true;
+            _repository.Delete(existentEntity);
+
+            return ReturnSuccessResponse();
         }
 
-        protected IApplicationResponse ReturnSuccessResponse(string message, BaseEntity entity = null)
+        protected IApplicationResponse ReturnSuccessResponse(string message = null, BaseEntity entity = null)
         {
             return new ApplicationResponse
             {
                 Result = entity,
                 IsValid = _validator.IsValid,
-                Messages = new List<string> { message }
+                Messages = message != null ? new List<string> { message } : null
             };
         }
 
-        protected IApplicationResponse ReturnValidationErrorResponse()
+        protected IApplicationResponse ReturnValidationErrorResponse(BaseEntity entity = null)
         {
             return new ApplicationResponse
             {
+                Result = entity,
                 IsValid = _validator.IsValid,
                 Messages = _validator.ErrorMessages
             };

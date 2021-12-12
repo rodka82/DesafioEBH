@@ -17,7 +17,9 @@ namespace API.Mapper
             CreateMap<Store, StoreDTO>();
             CreateMap<StockItem, StockItemDTO>();
             CreateMap<Product, ProductDTO>();
-            CreateMap<ApplicationResponse, ApiResponse>();
+            CreateMap<Store, BaseEntityDTO>();
+            CreateMap<Product, BaseEntityDTO>();
+            CreateMap<StockItem, BaseEntityDTO>();
         }
     }
 }

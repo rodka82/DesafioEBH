@@ -41,9 +41,9 @@ namespace Tests.Controllers
 
             var result = _controller.GetById(1);
             var objectResult = (OkObjectResult)result;
-            var response = (ApiResponse)objectResult.Value;
+            var response = (ApplicationResponse)objectResult.Value;
 
-            Assert.IsType<ApiResponse>(response);
+            Assert.IsType<ApplicationResponse>(response);
         }
 
         [Fact]
@@ -58,9 +58,9 @@ namespace Tests.Controllers
 
             var result = _controller.Save(_product);
             var objectResult = (BadRequestObjectResult)result;
-            var response = (ApiResponse)objectResult.Value;
+            var response = (ApplicationResponse)objectResult.Value;
 
-            Assert.IsType<ApiResponse>(response);
+            Assert.IsType<ApplicationResponse>(response);
             Assert.True(response.Messages.Any());
         }
 
@@ -72,11 +72,10 @@ namespace Tests.Controllers
 
             var result = _controller.Save(_product);
             var objectResult = (ObjectResult)result;
-            var response = (ApiResponse)objectResult.Value;
+            var response = (ApplicationResponse)objectResult.Value;
 
-            Assert.IsType<ApiResponse>(response);
+            Assert.IsType<ApplicationResponse>(response);
             Assert.True(response.Messages.Any());
-            Assert.Equal(500, response.StatusCode);
         }
 
         [Fact]
@@ -93,9 +92,9 @@ namespace Tests.Controllers
 
             var result = _controller.Delete(_product);
             var objectResult = (ObjectResult)result;
-            var response = (ApiResponse)objectResult.Value;
+            var response = (ApplicationResponse)objectResult.Value;
 
-            Assert.IsType<ApiResponse>(response);
+            Assert.IsType<ApplicationResponse>(response);
             Assert.True(response.Messages.Any());
         }
     }

@@ -1,4 +1,5 @@
-﻿using API.Utils;
+﻿using API.Enum;
+using API.Utils;
 using Application.Services;
 using Application.Utils;
 using AutoMapper;
@@ -16,11 +17,11 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProductController : ApplicationBaseController
+    public class ProductController : ApplicationBaseController<ProductDTO>
     {
         private readonly IService<Product> _storeService;
 
-        public ProductController(IService<Product> storeService, IMapper mapper, ILogger<ApplicationBaseController> logger)
+        public ProductController(IService<Product> storeService, IMapper mapper, ILogger<ProductController> logger)
             :base(mapper, logger)
         {
             _storeService = storeService;
@@ -36,7 +37,7 @@ namespace API.Controllers
                 var product = _storeService.GetById(id);
                 var dto = _mapper.Map<ProductDTO>(product);
                 var response = ReturnSuccessResponse(dto);
-                return Ok(response);
+                return SetStatusCodeForSearch(response);
             }
             catch (Exception e)
             {
@@ -47,7 +48,6 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [HttpPut]
         public IActionResult Save(Product product)
         {
             IApplicationResponse result = new ApplicationResponse();
@@ -65,6 +65,21 @@ namespace API.Controllers
             }
         }
 
+        [HttpPut]
+        public IActionResult Update(Product product)
+        {
+            if (product.Id == 0)
+            {
+                IApplicationResponse result = new ApplicationResponse();
+                result.IsValid = false;
+                result.Messages = new List<string>() { "Informe um Id para alteração" };
+
+                return BadRequest(result);
+            }
+
+            return Save(product);
+        }
+
         [HttpDelete]
         public IActionResult Delete(Product product)
         {
@@ -73,11 +88,12 @@ namespace API.Controllers
             try
             {
                 result = _storeService.Delete(product);
-                return SetStatusCode(result);
+                return SetStatusCode(result, OperationType.Delete);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 AddUserFriendlyErrorMessage(result);
+                LogError(e);
                 return StatusCode(StatusCodes.Status500InternalServerError, ReturnApiResponse(result));
             }
         }

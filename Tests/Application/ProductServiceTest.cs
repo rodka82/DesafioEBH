@@ -26,19 +26,21 @@ namespace Tests.Services
             Product.Price = 10.50;
             return Product;
         }
-
-        [Fact]
-        public void ShouldValidateNullObjectOnSave()
+        public class BasicValidation : ProductServiceTest
         {
-            var response = _service.Save(null);
-            Assert.Contains(response.Messages, m => m.Contains("Nenhum produto foi informado"));
-        }
+            [Fact]
+            public void ShouldValidateNullObjectOnSave()
+            {
+                var response = _service.Save(null);
+                Assert.Contains(response.Messages, m => m.Contains("Nenhum produto foi informado"));
+            }
 
-        [Fact]
-        public void ShouldValidateNullObjectOnDelete()
-        {
-            var response = _service.Delete(null);
-            Assert.Contains(response.Messages, m => m.Contains("Nenhum produto foi informado"));
+            [Fact]
+            public void ShouldValidateNullObjectOnDelete()
+            {
+                var response = _service.Delete(null);
+                Assert.Contains(response.Messages, m => m.Contains("Nenhum registro foi informado para remoção"));
+            }
         }
 
         public class NameValidation : ProductServiceTest

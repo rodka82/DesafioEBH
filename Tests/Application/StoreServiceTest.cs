@@ -31,18 +31,21 @@ namespace Tests.Services
             return store;
         }
 
-        [Fact]
-        public void ShouldValidateNullObjectOnSave()
+        public class BasicValidation : StoreServiceTest
         {
-            var response = _service.Save(null);
-            Assert.Contains(response.Messages, m => m.Contains("Nenhuma loja foi informada"));
-        }
+            [Fact]
+            public void ShouldValidateNullObjectOnSave()
+            {
+                var response = _service.Save(null);
+                Assert.Contains(response.Messages, m => m.Contains("Nenhuma loja foi informada"));
+            }
 
-        [Fact]
-        public void ShouldValidateNullObjectOnDelete()
-        {
-            var response = _service.Delete(null);
-            Assert.Contains(response.Messages, m => m.Contains("Nenhuma loja foi informada"));
+            [Fact]
+            public void ShouldValidateNullObjectOnDelete()
+            {
+                var response = _service.Delete(null);
+                Assert.Contains(response.Messages, m => m.Contains("Nenhum registro foi informado para remoção."));
+            }
         }
 
         public class NameValidation : StoreServiceTest

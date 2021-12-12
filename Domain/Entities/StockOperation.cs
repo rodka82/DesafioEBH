@@ -9,7 +9,7 @@ namespace Domain.Entities
     public class StockOperation
     {
         public int StockItemId { get; set; }
-        public OperationType OperationType { get; set; }
+        public StockOperationType OperationType { get; set; }
         public int Quantity { get; set; }
     }
 }
