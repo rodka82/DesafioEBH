@@ -20,7 +20,8 @@ namespace Infra.Mapping
 
             builder.Property(e => e.Quantity)
                  .HasColumnName("Quantity")
-                 .IsRequired();
+                 .IsRequired()
+                 .IsConcurrencyToken();
         }
     }
 }
