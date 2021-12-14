@@ -1,4 +1,5 @@
-﻿using API.Utils;
+﻿using API.Mapper;
+using API.Utils;
 using Application.Services;
 using Application.Utils;
 using AutoMapper;
@@ -50,7 +51,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult Save(StockItem stockItem)
+        public IActionResult Save(StockItemDTO stockItem)
         {
             IApplicationResponse result = new ApplicationResponse();
 
@@ -64,7 +65,7 @@ namespace API.Controllers
 
             try
             {
-                result = _storeService.Save(stockItem);
+                result = _storeService.Save(stockItem.ToEntity());
                 return SetStatusCode(result);
             }
             catch (Exception e)
