@@ -5,6 +5,7 @@ using Application.Utils;
 using AutoMapper;
 using Domain.DTOs;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -28,6 +29,7 @@ namespace API.Controllers
         }
         
         [HttpGet]
+        [Authorize]
         public IActionResult GetById(int id)
         {
             IApplicationResponse result = new ApplicationResponse();
@@ -48,6 +50,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Save(Product product)
         {
             IApplicationResponse result = new ApplicationResponse();
@@ -74,6 +77,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public IActionResult Update(Product product)
         {
             IApplicationResponse result = new ApplicationResponse();
@@ -100,6 +104,7 @@ namespace API.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         public IActionResult Delete(Product product)
         {
             IApplicationResponse result = new ApplicationResponse();
