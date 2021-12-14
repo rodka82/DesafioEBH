@@ -7,9 +7,9 @@ Para rodar o projeto localmente:
 1. **Instale o SDK do .NET 5**
 2. **Instale o Visual Studio**
 3. **Clone o projeto no Visual Studio usando este endereço do repositorio: *https://github.com/rodka82/DesafioEBH.git***
-4. **Execute o projeto em modo debug com o projeto com IIS Express**
+4. **Execute o projeto em modo debug com IIS Express**
 5. **Será aberto o Swagger da aplicação**
-6. **A API é protegida por token JWT. O únido endpoint liberado é o do JWT. Execute-o e copie o token gerado**
+6. **A API é protegida por token JWT. O único endpoint liberado é o do JWT. Execute-o e copie o token gerado**
 7. **Clique no botão de autenticação (um cadeado no alto da página do swagger).**
 8. **No campo requerido escreva Bearer + token gerado. Isto liberará o acesso aos endpoints.**
 
