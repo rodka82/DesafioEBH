@@ -10,8 +10,8 @@ Para rodar o projeto localmente:
 4. **Execute o projeto em modo debug com o projeto com IIS Express**
 5. **Será aberto o Swagger da aplicação**
 6. **A API é protegida por token JWT. O únido endpoint liberado é o do JWT. Execute-o e copie o token gerado**
-7. **Clique no botão de autenticação (um cadeado no alto da página do swagger). **
-8. **No campo requerido escreva Bearer + token gerado **. Isto liberará o acesso aos endpoints.
+7. **Clique no botão de autenticação (um cadeado no alto da página do swagger).**
+8. **No campo requerido escreva Bearer + token gerado **. Isto liberará o acesso aos endpoints.**
 
 A aplicação pode:
 - Cadastrar, alterar, excluir e pesquisar Loja (apenas por ID)
