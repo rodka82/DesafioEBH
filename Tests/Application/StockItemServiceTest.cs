@@ -26,8 +26,8 @@ namespace Tests.Services
         protected StockItem GenerateValidStockItem()
         {
             var stockItem = new StockItem();
-            stockItem.Product = new Product { Id = 1, Name = "Nome Produto", Price = 9.5 };
-            stockItem.Store = new Store { Id = 1, Name = "Nome Loja" };
+            stockItem.ProductId = 1;
+            stockItem.StoreId = 1;
             stockItem.Quantity = 10;
             return stockItem;
         }
@@ -51,19 +51,19 @@ namespace Tests.Services
         public class AssociationtValidation : StockItemServiceTest
         {
             [Fact]
-            public void ShouldValidateNullProduct()
+            public void ShouldValidateProductWithoutId()
             {
                 var StockItem = GenerateValidStockItem();
-                StockItem.Product = null;
+                StockItem.ProductId = 0;
                 var response = _service.Save(StockItem);
                 Assert.Contains(response.Messages, m => m.Contains("Um produto deve ser associado a este Item"));
             }
 
             [Fact]
-            public void ShouldValidateNullStore()
+            public void ShouldValidateStoreWithoutId()
             {
                 var StockItem = GenerateValidStockItem();
-                StockItem.Store = null;
+                StockItem.StoreId = 0;
                 var response = _service.Save(StockItem);
                 Assert.Contains(response.Messages, m => m.Contains("Uma loja deve ser associada a este Item"));
             }
@@ -82,8 +82,6 @@ namespace Tests.Services
 
                 Assert.NotNull(result);
                 Assert.IsType<StockItem>(result);
-                Assert.Equal("Nome Produto", result.Product.Name);
-                Assert.Equal("Nome Loja", result.Store.Name);
                 Assert.Equal(10, result.Quantity);
 
                 ResetRepository();
