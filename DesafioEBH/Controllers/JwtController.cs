@@ -11,6 +11,7 @@ namespace API.Controllers
     [Route("[Controller]")]
     public class JwtController : ControllerBase
     {
+        [HttpGet]
         public IActionResult Jwt()
         {
             return new ObjectResult(JwtToken.GenerateJwtToken());

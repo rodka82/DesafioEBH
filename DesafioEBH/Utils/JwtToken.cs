@@ -26,7 +26,7 @@ namespace API.Utils
             {
                 {"sub", "Subject" },
                 {"name", "admin"},
-                {"exp", 1639449669},
+                {"exp", ts},
                 {"iss", "https://localhost:44387/"},
                 {"aud", "https://localhost:44387/"}
             };
